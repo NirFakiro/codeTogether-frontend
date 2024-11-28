@@ -27,20 +27,23 @@
   .code-editor {
     flex: 2;
 
-    .starter-code {
-      width: 100%;
-      height: rem(200px);
-      padding: rem(10px);
-      border: rem(1px) solid $gray2;
-      border-radius: rem(5px);
-      font-family: monospace;
-      background-color: $clr6;
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: rem(10px);
+
+      .left-buttons {
+        display: flex;
+        gap: rem(10px);
+      }
     }
 
     .btn-primary {
-      background-color: $clr1;
+      background-color: $clr8;
       color: $clr6;
       padding: rem(10px) rem(20px);
+      margin: rem(5px);
       border: none;
       border-radius: rem(5px);
       cursor: pointer;
@@ -48,6 +51,14 @@
       &:hover {
         background-color: darken($clr1, 10%);
       }
+    }
+    .solution-text {
+      background-color: $clr4;
+      color: $clr7;
+      padding: rem(10px);
+      border-radius: rem(5px);
+      margin-top: rem(10px);
+      font-family: sans-serif;
     }
   }
 }

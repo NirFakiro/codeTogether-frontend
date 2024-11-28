@@ -38,9 +38,7 @@ export function HomePage() {
               className="card-header"
             >
               <h2>{code.title}</h2>
-              <span className={`level ${code.level.toLowerCase()}`}>
-                {code.level}
-              </span>
+              <span className={`level ${code.level}`}>{code.level}</span>
             </div>
           </div>
         ))}

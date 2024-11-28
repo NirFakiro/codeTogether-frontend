@@ -1,5 +1,5 @@
 .card {
-  width: calc(33.33% - 20px);
+  width: calc(28% - 20px);
   cursor: pointer;
   background-color: $clr6;
   border: 1px solid $gray1;
@@ -42,6 +42,10 @@
         background-color: #f39c12;
         color: $clr6;
       }
+      &.hard {
+        background-color: #f31212;
+        color: $clr6;
+      }
     }
   }
 
@@ -59,6 +63,7 @@
 
 .title {
   font-size: rem(45px);
+  text-align: center;
   font-family: sans-serif;
   padding: rem(50px) 0;
   margin: auto;
