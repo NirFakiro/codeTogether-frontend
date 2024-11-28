@@ -4,9 +4,12 @@
 
 // Basics
 @import 'basics/helpers';
+@import 'basics/base.scss';
 
 // pages
 @import 'pages/HomePage.scss';
+@import 'pages/CodePage.scss';
+@import 'RootCmp';
 
 //cmps
 @import 'cmps/AppHeader.scss';

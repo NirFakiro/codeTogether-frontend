@@ -1,5 +1,6 @@
 .card {
   width: calc(33.33% - 20px);
+  cursor: pointer;
   background-color: $clr6;
   border: 1px solid $gray1;
   border-radius: 8px;
@@ -31,8 +32,6 @@
       font-size: rem(14px);
       padding: rem(4px) rem(8px);
       border-radius: 4px;
-      color: $clr6;
-      background-color: $clr3;
 
       &.easy {
         background-color: #28a745;
@@ -62,7 +61,5 @@
   font-size: rem(45px);
   font-family: sans-serif;
   padding: rem(50px) 0;
-  width: calc(100% - rem(32px));
   margin: auto;
-  color: $clr2;
 }

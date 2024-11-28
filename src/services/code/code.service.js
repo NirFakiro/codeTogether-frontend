@@ -6,7 +6,7 @@ export const codeService = {
 }
 async function query() {
   const codes = httpService.get('code')
-  console.log('Response from server:', codes)
+
   return codes
 }
 

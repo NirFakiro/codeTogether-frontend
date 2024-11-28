@@ -1,0 +1,53 @@
+.code-page {
+  display: flex;
+  font-family: sans-serif;
+  min-height: 100vh;
+  gap: rem(20px);
+  padding: rem(20px);
+  background-color: $clr5;
+  color: $clr7;
+
+  .code-description {
+    flex: 1;
+
+    padding: rem(20px);
+    background-color: $clr6;
+    border-radius: rem(10px);
+    box-shadow: 0 rem(4px) rem(6px) rgba(0, 0, 0, 0.1);
+
+    .example {
+      margin-top: rem(20px);
+
+      p {
+        margin: rem(8px) 0;
+      }
+    }
+  }
+
+  .code-editor {
+    flex: 2;
+
+    .starter-code {
+      width: 100%;
+      height: rem(200px);
+      padding: rem(10px);
+      border: rem(1px) solid $gray2;
+      border-radius: rem(5px);
+      font-family: monospace;
+      background-color: $clr6;
+    }
+
+    .btn-primary {
+      background-color: $clr1;
+      color: $clr6;
+      padding: rem(10px) rem(20px);
+      border: none;
+      border-radius: rem(5px);
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($clr1, 10%);
+      }
+    }
+  }
+}

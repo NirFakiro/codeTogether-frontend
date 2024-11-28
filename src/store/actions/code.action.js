@@ -10,7 +10,7 @@ export async function loadCodes() {
       type: SET_CODES,
       codes,
     })
-    console.log('code:', codes)
+
     return codes
   } catch (err) {
     console.log('Cannot get codes', err)
