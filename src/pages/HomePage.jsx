@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 export function HomePage() {
   const navigae = useNavigate()
   const codes = useSelector((state) => {
-    console.log('Current state:', state)
     return state.codeModule.codes
   })
 
@@ -14,21 +13,24 @@ export function HomePage() {
     loadCodes()
   }, [])
 
-  function navTo() {
-    navigae('/start')
-  }
   if (!codes) {
     return <div>Loading...</div>
   }
   return (
     <div>
-      <h1>Choose code block</h1>
-      <ul>
+      <h1 className="title">Choose code block</h1>
+      <div className="flex ">
         {codes.map((code) => (
-          <li key={code.id}>{code.title}</li>
+          <div key={code.id} className="card">
+            <div className="card-header">
+              <h2>{code.title}</h2>
+              <span className={`level ${code.level.toLowerCase()}`}>
+                {code.level}
+              </span>
+            </div>
+          </div>
         ))}
-      </ul>
-      <button onClick={navTo}>Nav To</button>
+      </div>
     </div>
   )
 }

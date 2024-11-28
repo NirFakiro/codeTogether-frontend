@@ -4,4 +4,10 @@
 
 // Basics
 @import 'basics/helpers';
-@import 'basics/base';
+
+// pages
+@import 'pages/HomePage.scss';
+
+//cmps
+@import 'cmps/AppHeader.scss';
+@import 'cmps/AppFooter.scss';

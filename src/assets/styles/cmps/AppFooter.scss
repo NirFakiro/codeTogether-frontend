@@ -1,0 +1,21 @@
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  background-color: $clr8;
+  padding: rem(10px) 1rem;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.app-footer p {
+  font-size: rem(12px);
+  color: #fff;
+  font-family: sans-serif;
+  letter-spacing: 0.5px;
+  margin-bottom: 0;
+}
+
+.app-footer p:hover {
+  color: $clr1;
+}

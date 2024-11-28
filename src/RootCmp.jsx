@@ -1,16 +1,18 @@
 import React from 'react'
 import { Routes, Route } from 'react-router'
 import { HomePage } from './pages/HomePage'
-import { Start } from './cmps/Start'
+import { AppHeader } from './cmps/AppHeader'
+import { AppFooter } from './cmps/AppFooter'
 export function RootCmp() {
   return (
     <div className="main-container">
-      <HomePage />
       <main>
+        <AppHeader />
         <Routes>
-          <Route path="start" element={<Start />}></Route>
+          <Route path="/" element={<HomePage />}></Route>
         </Routes>
       </main>
+      <AppFooter />
     </div>
   )
 }
