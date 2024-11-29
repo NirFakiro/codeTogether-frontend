@@ -18,7 +18,7 @@ export async function loadCodes() {
   }
 }
 
-export async function getCodeById(codeId) {
+export async function loadCode(codeId) {
   try {
     const code = await codeService.getById(codeId)
     store.dispatch({ type: SET_CODE, code })

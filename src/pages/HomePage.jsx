@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router'
-import { getCodeById, loadCodes } from '../store/actions/code.action'
+import { loadCodes } from '../store/actions/code.action'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { SET_CODE } from '../store/reducers/code.reducer'
-import { store } from '../store/store'
 
 export function HomePage() {
   const navigae = useNavigate()
@@ -14,14 +12,7 @@ export function HomePage() {
   }, [])
 
   function onOpenCodeBlock(codeId) {
-    getCodeById(codeId)
-      .then((code) => {
-        store.dispatch({ type: SET_CODE, code })
-        navigae(`/code/${codeId}`)
-      })
-      .catch((err) => {
-        console.error('Failed to fetch code:', err)
-      })
+    navigae(`/code/${codeId}`)
   }
 
   if (!codes) {

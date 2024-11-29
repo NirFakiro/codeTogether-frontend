@@ -1,14 +1,41 @@
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Editor from '@monaco-editor/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { loadCode } from '../store/actions/code.action'
+import { socketService } from '../services/socket.service'
 
 export function CodePage() {
-  const navigte = useNavigate()
+  const { id } = useParams()
   const code = useSelector((state) => state.codeModule.code)
 
-  const [userCode, setUserCode] = useState(code.starterCode)
+  const [role, setRole] = useState('')
+  const [roomStatus, setRoomStatus] = useState({
+    isStudentPresent: false,
+    watcherCount: 0,
+  })
+  const navigte = useNavigate()
+
+  const [userCode, setUserCode] = useState('')
   const [solution, setSolution] = useState(false)
+
+  useEffect(() => {
+    loadCode(id)
+  }, [id])
+
+  useEffect(() => {
+    socketService.emit('join-room', id)
+
+    socketService.on('user-role', setRole)
+    socketService.on('room-status', setRoomStatus)
+
+    return () => {
+      socketService.emit('disconnect-from-room')
+      socketService.off('user-role')
+      socketService.off('watcher-count')
+    }
+  }, [id])
 
   function onSolution() {
     setSolution(!solution)
@@ -16,6 +43,11 @@ export function CodePage() {
 
   function handleEditorChange(value) {
     setUserCode(value)
+  }
+
+  function onBackToLobby() {
+    socketService.emit('disconnect-from-room')
+    navigte('/')
   }
 
   function handleRunCode() {
@@ -54,9 +86,6 @@ export function CodePage() {
     }
   }
 
-  function onBackToLobby() {
-    navigte('/')
-  }
   if (!code) return <div>Loading code...</div>
   return (
     <div className="code-page">
@@ -79,11 +108,23 @@ export function CodePage() {
       </div>
 
       <div className="code-editor">
+        <div className="flex">
+          <p>
+            <strong>Your role:</strong> {role}
+          </p>
+          <p>
+            <strong>Student Present:</strong>{' '}
+            {roomStatus.isStudentPresent ? 'Yes' : 'No'}
+          </p>
+          <p>
+            <strong>Viewers:</strong> {roomStatus.watcherCount}
+          </p>
+        </div>
         <Editor
           height="50vh"
           defaultLanguage="javascript"
           automaticLayout={true}
-          defaultValue={code.starterCode}
+          value={code.starterCode}
           onChange={handleEditorChange}
           theme="vs-dark"
         />
