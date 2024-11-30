@@ -1,8 +1,17 @@
-# React + Vite
+# Frontend - Technologies
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project utilizes several advanced technologies to provide a dynamic and efficient frontend:
 
-Currently, two official plugins are available:
+## **Technologies Used**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React.js**:  
+  A JavaScript library used for building user interfaces with a component-based architecture, enabling the creation of reusable and maintainable UI components.
+
+- **SPA (Single Page Application)**:  
+  Ensures a fast, seamless user experience by loading content dynamically without the need for full-page reloads.
+
+- **SCSS**:  
+  A CSS preprocessor that allows for modular and scalable styling, providing features like variables, nested rules, and mixins for better maintainability.
+
+- **Redux**:  
+  A state management tool that helps manage the application’s state in a predictable way, facilitating communication between components and ensuring consistent data flow.
