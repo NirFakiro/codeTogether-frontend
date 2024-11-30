@@ -7,21 +7,18 @@ import { useParams } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
-
 import { loadCode } from '../store/actions/code.action'
 import { socketService } from '../services/socket.service'
+import { LinearProgress } from '@mui/material'
 
 export function CodePage() {
   const { id } = useParams()
   const code = useSelector((state) => state.codeModule.code)
   const navigte = useNavigate()
-  const handleClose = () => setOpen(false)
+  const handleClose = () => setOpenModalResult(false)
 
-  const [open, setOpen] = React.useState(false)
-  const [modalContent, setModalContent] = useState({
-    text: '',
-    icon: '',
-  })
+  const [openModalResult, setOpenModalResult] = React.useState(false)
+  const [modalContent, setModalContent] = useState('')
 
   const style = {
     position: 'absolute',
@@ -52,15 +49,13 @@ export function CodePage() {
 
     socketService.on('user-role', setRole)
     socketService.on('room-status', setRoomStatus)
-    socketService.on('code-changed', (newCode) => {
-      setUserCode(newCode)
-    })
+    // socketService.on('code-changed', setUserCode)
 
     return () => {
       socketService.emit('disconnect-from-room')
       socketService.off('user-role')
       socketService.off('room-status')
-      socketService.off('code-changed')
+      // socketService.off('code-changed', setUserCode)
     }
   }, [id])
 
@@ -69,12 +64,10 @@ export function CodePage() {
   }
 
   function handleEditorChange(value) {
-    console.log('vale:', value)
-
     setUserCode(value)
-    console.log('usercode:', userCode)
+    console.log('value:', value)
+    socketService.emit('code-update', id, value)
   }
-  socketService.emit('code-update', id, userCode)
 
   function onBackToLobby() {
     socketService.on('redirect-to-lobby', () => {
@@ -95,10 +88,10 @@ export function CodePage() {
       const userFunction = eval(`(${userCode})`)
 
       if (typeof userFunction !== 'function') {
-        setModalContent({
-          text: 'The code is not a valid function. Please review it and try again.',
-        })
-        setOpen(true)
+        setModalContent(
+          'The code is not a valid function. Please review it and try again.'
+        )
+        setOpenModalResult(true)
         return
       }
       // Itreate over all the test cases to evaluete the user's code.
@@ -114,17 +107,13 @@ export function CodePage() {
 
           // Compate the result to the expected output
           if (JSON.stringify(result) === JSON.stringify(expectedOutput)) {
-            setModalContent({
-              icon: '😊',
-              text: 'Great job!🎊',
-            })
-            setOpen(true)
+            const successMessage = '😊 Great job!🥳'
+            setModalContent(successMessage)
+            setOpenModalResult(true)
           } else {
-            setModalContent({
-              icon: 'Incorrect solution 😓',
-              text: 'Keep going, hard work pays off!',
-            })
-            setOpen(true)
+            const failureMessage = 'Incorrect solution 😓'
+            setModalContent(failureMessage)
+            setOpenModalResult(true)
           }
         } catch (innerErr) {
           alert(`Error during execution: ${innerErr.message}`)
@@ -135,7 +124,12 @@ export function CodePage() {
     }
   }
 
-  if (!code) return <div>Loading code...</div>
+  if (!code)
+    return (
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+    )
   return (
     <div className="code-page">
       <div className="code-description">
@@ -204,17 +198,14 @@ export function CodePage() {
       </div>
       <div>
         <Modal
-          open={open}
+          open={openModalResult}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              {modalContent.icon}
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              {modalContent.text}
+              {modalContent}
             </Typography>
           </Box>
         </Modal>

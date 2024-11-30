@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router'
 import { loadCodes } from '../store/actions/code.action'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { Box, LinearProgress } from '@mui/material'
 
 export function HomePage() {
   const navigae = useNavigate()
@@ -15,9 +16,12 @@ export function HomePage() {
     navigae(`/code/${codeId}`)
   }
 
-  if (!codes) {
-    return <div>Loading...</div>
-  }
+  if (!codes)
+    return (
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+    )
   return (
     <div>
       <h1 className="title">Choose code block</h1>
