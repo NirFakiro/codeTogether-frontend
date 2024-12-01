@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage'
 import { AppHeader } from './cmps/AppHeader'
 import { AppFooter } from './cmps/AppFooter'
 import { CodePage } from './pages/CodePage'
+
 export function RootCmp() {
   return (
     <div className="main-container">

@@ -50,13 +50,15 @@ export function CodePage() {
 
     socketService.on('user-role', setRole)
     socketService.on('room-status', setRoomStatus)
-    // socketService.on('code-changed', setUserCode)
+    socketService.on('code-changed', (value) => {
+      setUserCode(value)
+    })
 
     return () => {
       socketService.emit('disconnect-from-room')
       socketService.off('user-role')
       socketService.off('room-status')
-      // socketService.off('code-changed', setUserCode)
+      socketService.off('code-changed')
     }
   }, [id])
 
@@ -67,7 +69,7 @@ export function CodePage() {
   function handleEditorChange(value) {
     setUserCode(value)
     console.log('value:', value)
-    socketService.emit('code-update', id, value)
+    socketService.emit('code-update', { roomId: id, updatedCode: value })
   }
 
   function onBackToLobby() {
@@ -177,7 +179,7 @@ export function CodePage() {
           height="50vh"
           defaultLanguage="javascript"
           automaticLayout={true}
-          value={code.starterCode}
+          value={userCode || code.starterCode}
           onChange={handleEditorChange}
           theme="vs-dark"
           options={{ readOnly: role !== 'student' }}
