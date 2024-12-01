@@ -1,37 +1,22 @@
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Editor from '@monaco-editor/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
 
 import { loadCode } from '../store/actions/code.action'
 import { socketService } from '../services/socket.service'
 import { LinearProgress } from '@mui/material'
+import { Modal } from '../cmps/Modal'
 
 export function CodePage() {
   const { id } = useParams()
   const code = useSelector((state) => state.codeModule.code)
   const navigte = useNavigate()
-  const handleClose = () => setOpenModalResult(false)
-
-  const [openModalResult, setOpenModalResult] = React.useState(false)
   const [modalContent, setModalContent] = useState('')
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  }
   const [role, setRole] = useState('')
   const [roomStatus, setRoomStatus] = useState({
     isStudentPresent: false,
@@ -50,8 +35,9 @@ export function CodePage() {
 
     socketService.on('user-role', setRole)
     socketService.on('room-status', setRoomStatus)
-    socketService.on('code-changed', (value) => {
-      setUserCode(value)
+    socketService.on('code-changed', setUserCode)
+    socketService.on('show-modal', (content) => {
+      setModalContent(content)
     })
 
     return () => {
@@ -59,8 +45,9 @@ export function CodePage() {
       socketService.off('user-role')
       socketService.off('room-status')
       socketService.off('code-changed')
+      socketService.off('show-modal')
     }
-  }, [id])
+  }, [id, setModalContent])
 
   function onSolution() {
     setSolution(!solution)
@@ -83,6 +70,7 @@ export function CodePage() {
   function handleRunCode() {
     // Retrieve the test cases from the code object.
     const testCases = code.testCases
+    let failCount = 0
 
     try {
       // Convert the user's code string into an executable function using eval.
@@ -94,9 +82,10 @@ export function CodePage() {
         setModalContent(
           'The code is not a valid function. Please review it and try again.'
         )
-        setOpenModalResult(true)
+
         return
       }
+
       // Itreate over all the test cases to evaluete the user's code.
       for (const testCase of testCases) {
         const input = testCase.input
@@ -109,22 +98,20 @@ export function CodePage() {
           const result = userFunction(...preparedInput)
 
           // Compate the result to the expected output
-          if (JSON.stringify(result) === JSON.stringify(expectedOutput)) {
-            const successMessage = '😊 Great job!🥳'
-            setModalContent(successMessage)
-            setOpenModalResult(true)
-          } else {
-            const failureMessage = 'Incorrect solution 😓'
-            setModalContent(failureMessage)
-            setOpenModalResult(true)
+          if (JSON.stringify(result) !== JSON.stringify(expectedOutput)) {
+            failCount++
           }
-        } catch (innerErr) {
-          alert(`Error during execution: ${innerErr.message}`)
+        } catch {
+          failCount++
         }
       }
-    } catch (err) {
-      alert(`Error creating function: ${err.message}`)
+    } catch {
+      failCount++
     }
+    const content =
+      failCount === 0 ? '😊 Great job!🥳' : 'Incorrect solution 😓'
+    setModalContent(content)
+    socketService.emit('show-modal', { roomId: id, content })
   }
 
   if (!code)
@@ -199,20 +186,7 @@ export function CodePage() {
         </div>
         {solution && <p className="solution-text">{code.solution}</p>}
       </div>
-      <div>
-        <Modal
-          open={openModalResult}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              {modalContent}
-            </Typography>
-          </Box>
-        </Modal>
-      </div>
+      <Modal setModalContent={setModalContent} modalContent={modalContent} />
     </div>
   )
 }
